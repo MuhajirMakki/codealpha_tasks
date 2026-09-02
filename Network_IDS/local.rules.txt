@@ -1,0 +1,12 @@
+# -----------------------------------------------------------
+# CUSTOM SNORT IDS RULES 
+# -----------------------------------------------------------
+
+# 1. Detect Ping Sweeps / ICMP Flood (e.g., Nmap recon)
+alert icmp any any -> $HOME_NET any (msg:"ALERT: ICMP Ping Flood Detected"; threshold:type both, track by_src, count 50, seconds 10; sid:1000001; rev:1;)
+
+# 2. Detect SSH Brute Force attempts (Multiple SYN packets to port 22)
+alert tcp any any -> $HOME_NET 22 (msg:"WARNING: Possible SSH Brute Force"; flags:S; threshold:type limit, track by_src, count 5, seconds 60; sid:1000002; rev:1;)
+
+# 3. Detect SQL Injection attempts over HTTP
+alert tcp any any -> $HOME_NET 80 (msg:"CRITICAL: SQL Injection Attempt Detected"; content:"UNION SELECT"; nocase; sid:1000003; rev:1;)
